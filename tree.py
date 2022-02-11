@@ -139,6 +139,39 @@ def findClosestLeaf(self, root, k):
                     queue.append(n)
 
 
+###############################
+### FIND DUPLICATE SUBTREES ###
+###############################
+'''
+Given the root of a binary tree, return all duplicate subtrees.
+For each kind of duplicate subtrees, you only need to return the root node of any one of them.
+Two trees are duplicate if they have the same structure with the same node values.
+'''
+def findDuplicateSubtrees(self, root: Optional[TreeNode]) -> List[Optional[TreeNode]]:
+        res = []
+        hmap = {}
+        
+        def recurse(node, path):
+            if node is None:
+                return '#'
+            
+            path += ','.join([str(node.val), recurse(node.left, path), recurse(node.right, path)])
+            
+            if path in hmap:
+                hmap[path] += 1
+                if hmap[path] == 2:
+                    res.append(node)
+            else:
+                hmap[path] = 1
+                
+            
+            return path
+        
+        recurse(root, '')
+
+        return res
+
+
 ##########################
 ### INVERT BINARY TREE ###
 ##########################
@@ -288,12 +321,6 @@ What if the BST is modified (insert/delete operations) often and you need to fin
 # time: O(n)
 # space: O(n)
 def kthSmallest(self, root, k):
-    """
-    :type root: TreeNode
-    :type k: int
-    :rtype: int
-    """
-    
     def inorder(root):
         if root==None:
             return []
@@ -352,6 +379,88 @@ def lowestCommonAncestor(self, root, p, q):
     while q not in ancestors:
         q = parent[q]
     return q
+
+"""
+public interface FirstCommonAncestor {
+ 
+    /**
+     * Given two nodes of a tree,
+     * method should return the deepest common ancestor of those nodes.
+     *
+     *          A
+     *         / \
+     *        B   C
+     *       / \
+     *      D   E 
+     *     /   / \
+     *    V   G   F 
+         /        |
+        K         I
+     *
+     *  commonAncestor(D, F) = B
+     *  commonAncestor(C, G) = A
+     *  commonAncestor(E, B) = B
+     *  commonAncestor(F, I) = F
+     */
+    Node commonAncestor(Node one, Node two);
+}
+ 
+class Node:
+    def__init__():
+    
+    final Node parent;
+    final Node left;
+    final Node right;
+ 
+ 
+    public Node(Node parent, Node left, Node right) {
+        this.parent = parent;
+        this.left = left;
+        this.right = right;
+    }
+ 
+    boolean isRoot() {
+        return parent == null;
+    }
+}
+
+
+match = []
+
+recursive_helper(p1, p2):
+
+  if p1 and p2:
+    if p1[0] == p2[0]:
+      match.append(p1[0])
+      
+    else:
+      return recursive_helper(p1[1:],p2), recursive_helper(p1, p2[1:])
+      
+"""
+
+def first_common_ancestor(n1, n2): 
+  
+  # paths containing arr of nodes 
+  p1, p2 = [n1], [n2]
+  
+  while !n1.isRoot:
+    p1.append(n1.parent)
+    n1 = n1.parent
+    
+  while !n2.isRoot:
+    p2.append(n2.parent)
+    n2 = n2.parent
+    
+  p1_set, p2_set = set(p1), set(p2)
+  intersection = p1_set.intersection(p2_set) 
+  
+  for node in p1:
+    if node is in intersection:
+      return node
+    
+  return None 
+
+
 
 
 
@@ -560,5 +669,78 @@ def verticalOrder(root):
             
     return [col_nodes[col] for col in range(min_col, max_col+1)]
 
+
+
+######################
+### SYMMETRIC TREE ### 
+######################
+'''
+Given the root of a binary tree, check whether it is a mirror of itself (i.e., symmetric around its center).
+
+Input: root = [1,2,2,3,4,4,3]
+Output: true
+    1
+  2   2
+3  4 4  3
+
+Do this iteratively. Do this with ONE n space.
+'''
+
+def symmetric_tree(root):
+  
+  if not root:
+    return False 
+  
+  if root and not root.left and not root.left:
+    return True
+  
+  queue_left = [root.left]
+  queue_right = [root.right]
+  
+  str_left = ""
+  str_right = ""
+  
+  while len(queue_left) > 0:
+    curr = queue.pop[0]
+    str_left += curr.val
+    
+    if curr.left:
+      queue_left.append(curr.left)
+    if curr.right:
+      queue_left.append(curr.right)
+      
+      
+  while len(queue_right) > 0:
+    curr = queue.pop[0]
+    str_right += curr.val
+    if curr.right:
+      queue_left.append(curr.right)
+    if curr.left:
+      queue_left.append(curr.left)
+      
+  return str_left == str_right
+
+
+### Iterative approach: ###
+# Time - O(n) Space - O(n)
+  def isSymmetric(self, root):
+      queue = [root, root]
+      while len(queue) != 0:
+          node_1 = queue.pop(0)
+          node_2 = queue.pop(0)
+
+          if not node_1 and not node_2:
+              continue
+          if not node_1 or not node_2:
+              return False
+          if node_1.val != node_2.val:
+              return False
+
+          queue.append(node_1.left)
+          queue.append(node_2.right)
+          queue.append(node_1.right)
+          queue.append(node_2.left)
+
+      return True
 
 

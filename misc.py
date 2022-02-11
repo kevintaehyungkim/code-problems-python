@@ -2,7 +2,9 @@
 
 ### Find the nth number in the fib sequence ###
 '''
-The Fibonacci numbers, commonly denoted F(n) form a sequence, called the Fibonacci sequence, such that each number is the sum of the two preceding ones, starting from 0 and 1. That is,
+The Fibonacci numbers, commonly denoted F(n) form a sequence, called the Fibonacci sequence, 
+such that each number is the sum of the two preceding ones, starting from 0 and 1. 
+That is,
 
 F(0) = 0,   F(1) = 1
 F(N) = F(N - 1) + F(N - 2), for N > 1.
@@ -88,3 +90,53 @@ return sum(stack)
 
 
 
+"""
+I think the first q was like printing a tree that has a and b as nodes
+sanjay gupta (Founder, CEO Genentech)
+and the parents can be either | or +
+sanjay gupta (Founder, CEO Genentech)
+and basically if it's a|b then you get set(a, b)
+sanjay gupta (Founder, CEO Genentech)
+and if it's + you get set(ab)
+sanjay gupta (Founder, CEO Genentech)
+and then you recursively build it
+sanjay gupta (Founder, CEO Genentech)
+and then after she asked me to construct the tree given a string like
+sanjay gupta (Founder, CEO Genentech)
+Arno Chang
+(a | (a + b | (a + b))) or something
+
+
+
+they gave me relatively easier questions involving trees and data structures
+
+
+
+
+
+design a system for
+a set of recipes
+and a set of ingredients
+and the recipes could be made up of raw ingredients and also of compound ingredients
+and yeah I made some objects and did some tree shit
+and basically had to return what could be made and so forth
+and then the follow up was like adding stock to each ingredient
+
+
+
+last question was a variation of largest island matrix
+except it was like largest land mass that could have water inside it
+so basically you have to first take out all the water that touches the edges
+and then the largest landmass with the land remaining kinda
+I did it in some 3 pass janky way where
+I filled in the land masses
+and then did largest land mass LOL
+but the dude liked me and we kinda clicked so I guess it was fine
+
+
+
+
+
+
+
+"""

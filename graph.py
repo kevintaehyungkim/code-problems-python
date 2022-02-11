@@ -36,16 +36,74 @@ Example 3:
     Output: "" 
 
 Explanation: The order is invalid, so return "".
-'''
 
-'''
+
 All approaches break the problem into three steps.
 
 Extracting dependency rules from the input. 
 For example "A must be before C", "X must be before D", or "E must be before B".
 Putting the dependency rules into a graph with letters as nodes and dependencies as edges (an adjacency list is best).
 Topologically sorting the graph nodes.
+
+Time: O(C)
+Space: O(1) or O(U + min(U^2,N) where U = unique letters and N = edges
 '''
+
+def alienOrder(self, words):
+    graph  = {}
+    for word in words:
+        for c in word:
+            graph[c] = set()
+    
+    
+    for first, second in zip(words, words[1:]):
+        print first, second
+        for c,d in zip(first, second):
+            print c, d
+            if c !=d:
+                graph[c].add(d)
+                break
+            else:
+                if len(second)<len(first):
+                    return ""
+            
+    visited  = {}
+    checked = {}
+    for word in words:
+        for c in word:
+            visited[c] = False
+            checked[c] = False
+    
+    output = deque([])
+    
+    def topological_dfs(node):
+        if checked[node]:
+            return True
+        
+        # cycle detection
+        if visited[node]:
+            return False
+        
+        visited[node] = True
+        
+        ret = True
+        for i in graph[node]:
+            ret = topological_dfs(i)
+            if not ret:
+                break
+        
+        visited[node] = False
+        checked[node] = True
+        output.appendleft(node)
+        return ret
+    
+    
+    for key in graph.keys():
+        if not topological_dfs(key):
+            return ""
+    
+    return "".join(output)
+
 
 
 #######################
@@ -70,29 +128,32 @@ Output: false
 '''
 # time: O(V + E)
 # spacE: O(V + E)
-def canFinish(self, numCourses, prerequisites):
-        graph = [[] for _ in xrange(numCourses)]
-        visit = [0 for _ in xrange(numCourses)]
-        
-        for x, y in prerequisites:
-            graph[x].append(y)
-        
-        def is_cycle(i):
-            if visit[i] == 1:
-                return False
-            if visit[i] == -1:
-                return True
-            visit[i] = -1
-            for j in graph[i]:
-                if is_cycle(j):
-                    return True
-            visit[i] = 1
+def can_finish(numCourses, prerequisites):
+    graph = [[] for _ in xrange(numCourses)] #[[], []]
+    visit = [0 for _ in xrange(numCourses)] #[0, 0]
+    
+    for x, y in prerequisites:
+        graph[x].append(y)
+    
+    # base state: visit[i] = 0
+    # if visited: visit[i] = -1
+    # if visiting: visit[i] = 1
+    def is_cycle(i):
+        if visit[i] == 1:
             return False
-        
-        for i in xrange(numCourses):
-            if is_cycle(i):
-                return False
-        return True
+        if visit[i] == -1:
+            return True
+        visit[i] = -1
+        for j in graph[i]:
+            if is_cycle(j):
+                return True
+        visit[i] = 1
+        return False
+    
+    for i in xrange(numCourses):
+        if is_cycle(i):
+            return False
+    return True
 
 
 
@@ -184,8 +245,8 @@ Explanation: Another possible reconstruction is ["JFK","SFO","ATL","JFK","ATL","
 '''
 
 # key idea: DFS and add to stack until no more destination and reverse stack
-# time: O(V*E)
-# space: O(V*E)
+# time: O(Elog(E/V)) -> DFS sort dominates, otherwise DFS -> O(E)
+# space: O(V+E)
 def findItinerary(tickets):
     graph = {}
 
@@ -224,4 +285,52 @@ def findItinerary(tickets):
     return res[::-1]
 
 
+### WORD LADDER ### 
+'''
+A transformation sequence from word beginWord to word endWord using a 
+dictionary wordList is a sequence of words beginWord -> s1 -> s2 -> ... -> sk such that:
+
+Every adjacent pair of words differs by a single letter.
+Every si for 1 <= i <= k is in wordList. 
+
+Note that beginWord does not need to be in wordList.
+sk == endWord
+
+Given two words, beginWord and endWord, and a dictionary wordList, 
+return the number of words in the shortest transformation sequence from beginWord to endWord, 
+or 0 if no such sequence exists.
+'''
+
+def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
+        """
+        :type beginWord: str
+        :type endWord: str
+        :type wordList: List[str]
+        :rtype: int
+        """
+        if endWord not in wordList or not endWord or not beginWord or not wordList:
+            return 0
+        
+        L = len(beginWord)
+        all_combo_dict = defaultdict(list)
+        
+        for word in wordList:
+            for i in range(L):
+                all_combo_dict[word[:i] + "*" + word[i+1:]].append(word) 
+                
+        bfs_queue = [(beginWord, 1)]
+        visited = set()
+        visited.add(beginWord)
+        
+        while bfs_queue:
+            current_word, level = bfs_queue.pop(0)
+            for i in range(L):
+                intermediate_word = current_word[:i] + "*" + current_word[i+1:]
+                for word in all_combo_dict[intermediate_word]:
+                    if word == endWord:
+                        return level + 1
+                    if word not in visited:
+                        visited.add(word)
+                        bfs_queue.append((word, level + 1))
+        return 0
 

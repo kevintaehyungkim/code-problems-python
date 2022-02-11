@@ -300,7 +300,7 @@ Return true. The frog can jump to the last stone by jumping
 
 # brute-force runtime is 3^N recursing through all possible scenarios
 # key idea: BFS with memoization
-# time: O(n^3) - Recursive BFS with memoization
+# time: O(n^3) - Recursive BFS with memoization 
 # space: O(n^2) - storing value and jumpsize in visited
 def can_cross(stones):
     last_stone = stones[-1]
@@ -408,17 +408,17 @@ def canArrange(self, arr, k):
 '''
 Given an unsorted array of integers, find the length of the longest consecutive elements sequence.
 
-Your algorithm should run in O(n) complexity.
-
 Example:
 
 Input: [100, 4, 200, 1, 3, 2]
 Output: 4
-
 Explanation: The longest consecutive elements sequence is [1, 2, 3, 4]. Therefore its length is 4.
+
+time: O(n) since we only look for the lowest in any sequence
+space: O(n)
 '''
 
-def longestConsecutive(self, nums):
+def longestConsecutive(nums):
     longest_streak = 0
     num_set = set(nums)
 
@@ -436,65 +436,52 @@ def longestConsecutive(self, nums):
     return longest_streak
 
 
-
-###################################
-### LONGEST INCREASING SEQUENCE ###
-###################################
+#################################
+### LONGEST MOUNTAIN IN ARRAY ###
+#################################
 '''
-Given an unsorted array of integers, find the length of longest increasing subsequence.
+You may recall that an array arr is a mountain array if and only if:
 
-Example:
+arr.length >= 3
+There exists some index i (0-indexed) with 0 < i < arr.length - 1 such that:
+arr[0] < arr[1] < ... < arr[i - 1] < arr[i]
+arr[i] > arr[i + 1] > ... > arr[arr.length - 1]
 
-Input: [10,9,2,5,3,7,101,18]
-Output: 4 
-Explanation: The longest increasing subsequence is [2,3,7,101], therefore the length is 4. 
+Given an integer array arr, return the length of the longest subarray, 
+which is a mountain. Return 0 if there is no mountain subarray.
 '''
+# time: O(n)
+# space: O(1)
 
-# time: O(N^2)
-# space: O(N)
-def lengthOfLIS(nums):
-    if not nums:
-        return 0
+def longest_mountain(arr):
+    i = 1
+    max_length = 0
     
-    n = len(nums)
-    dp = [1] * n
-
-    for i in range(1, n):
-        for j in range(i):
-            if nums[i] > nums[j]:
-                dp[i] = max(dp[i], 1 + dp[j])
+    while i < len(arr):
+        # check if left and right elements exist, and also if peak
+        if i+1 < len(arr) and i > 0 and arr[i]>arr[i-1] and arr[i]>arr[i+1]:         
+    
+            left, right = i-1, i+1
+            
+            # find left base
+            while left > 0:
+                if arr[left-1] >= arr[left]:
+                    break
+                left -= 1
                 
-    return max(dp)
-
-
-
-##############################
-### LARGEST CONTIGUOUS SUM ###
-##############################
-'''
-Given an integer array nums, find the contiguous subarray (containing at least one number) 
-which has the largest sum and return its sum.
-
-Example:
-
-Input: [-2,1,-3,4,-1,2,1,-5,4],
-Output: 6
-Explanation: [4,-1,2,1] has the largest sum = 6.
-Follow up:
-
-If you have figured out the O(n) solution, 
-try coding another solution using the divide and conquer approach, which is more subtle.
-'''
-
-# dynamic programming solution
-# O(n) time
-# O(1) space
-def max_subarray(nums):
-	if not nums:
-		return 0
-	for i in xrange(1,len(nums)):
-		nums[i] = max(nums[i], nums[i] + nums[i-1])
-	return max(nums)
+            # find right base
+            while right < len(arr)-1:
+                if arr[right] <= arr[right+1]:
+                    break
+                right += 1
+            
+            max_length = max(max_length, right-left+1)
+            i = right
+        
+        i+=1
+     
+        
+    return max_length
 
 
 
@@ -560,7 +547,8 @@ Output: 1
 ### PATTERN MATCHING - AMAZON 2016 ###
 ######################################
 '''
-Dictionary of words. Pattern. We need to find all the words in the dictionary that match the given pattern.
+Dictionary of words. Pattern. 
+We need to find all the words in the dictionary that match the given pattern.
 
 Dictionary: [‘ABC’ , ‘AMM’, ‘MNN’, ‘AQA’]
 Pattern: 'ABB'
@@ -657,28 +645,59 @@ Output: 6
 # time: O(n)
 # space: O(1)
 def trap(height):
-        left, right = 0, len(height)-1
-        left_max, right_max = 0, 0
-        total = 0
+    left, right = 0, len(height)-1
+    left_max, right_max = 0, 0
+    total = 0
+    
+    while left < right:
+        left_height = height[left]
+        right_height = height[right]
         
-        while left < right:
-            left_height = height[left]
-            right_height = height[right]
-            
-            if left_height < right_height:
-                if left_height > left_max:
-                    left_max = left_height
-                else:
-                    total += (left_max-left_height)
-                left += 1
+        if left_height < right_height:
+            if left_height > left_max:
+                left_max = left_height
             else:
-                if right_height > right_max:
-                    right_max = right_height
-                else:
-                    total += (right_max-right_height)
-                right -= 1
-                
-        return total
+                total += (left_max-left_height)
+            left += 1
+        else:
+            if right_height > right_max:
+                right_max = right_height
+            else:
+                total += (right_max-right_height)
+            right -= 1
+            
+    return total
+
+
+
+#########################################
+### LONGEST INCREASING PATH IN MATRIX ###
+#########################################
+'''
+Given an m x n integers matrix, 
+return the length of the longest increasing path in matrix.
+
+From each cell, you can either move in four directions: left, right, up, or down. 
+You may not move diagonally or move outside the boundary (i.e., wrap-around is not allowed).
+'''
+
+# time: O(mn)
+# space: O(mn)
+def longestIncreasingPath(self, matrix):
+    def dfs(i, j):
+        if not dp[i][j]:
+            val = matrix[i][j]
+            dp[i][j] = 1 + max(
+                dfs(i - 1, j) if i and val > matrix[i - 1][j] else 0,
+                dfs(i + 1, j) if i < M - 1 and val > matrix[i + 1][j] else 0,
+                dfs(i, j - 1) if j and val > matrix[i][j - 1] else 0,
+                dfs(i, j + 1) if j < N - 1 and val > matrix[i][j + 1] else 0)
+        return dp[i][j]
+
+    if not matrix or not matrix[0]: return 0
+    M, N = len(matrix), len(matrix[0])
+    dp = [[0] * N for i in range(M)]
+    return max(dfs(x, y) for x in range(M) for y in range(N))
 
 
 
@@ -812,6 +831,125 @@ def get_skyline(buildings):
             res.append([curr_pos, 0])
             
     return res
+
+
+
+###############################
+### SPLIT ARRAY LARGEST SUM ###
+###############################
+'''
+Given an array nums which consists of non-negative integers and an integer m, 
+you can split the array into m non-empty continuous subarrays.
+
+Write an algorithm to minimize the largest sum among these m subarrays.
+'''
+
+#time: 0(nlogn)
+# space: O(n)
+def splitArray(self, nums: List[int], m: int) -> int:
+    min_val=min(nums)       
+    max_val=sum(nums)   
+
+    while(min_val<=max_val):
+
+        mid=(min_val+max_val)//2
+  
+        def checker(nums, mid, m):
+            counter=1
+            curr=0
+            for i in range(len(nums)):
+                
+                curr+=nums[i]        
+                if curr>mid:
+                    counter+=1
+                    curr=nums[i]
+
+                    if curr>mid:    
+                        return False
+  
+                if counter >m:  return False
+        
+            return True
+                
+        res=checker(nums,mid,m)
+
+        if res==True:
+            max_val=mid-1
+            
+        elif res==False:
+            min_val=mid+1
+            
+    return min_val
+
+######################
+### STOCK PROFIT I ###
+######################
+'''
+Suppose we could access yesterday's Apple stock prices as a list, where:
+The indices are the time in minutes past trade opening time, which was 9:30am local time.
+The values are the price in dollars of Apple stock at that time.
+So if the stock cost $500 at 10:30am, stock_prices_yesterday[60] = 500.
+Write an efficient function that takes stock_prices_yesterday and returns the best profit 
+I could have made from 1 purchase and 1 sale of 1 Apple stock yesterday.
+
+Difficulty: Medium
+
+Solution notes:
+O(n) time
+O(1) space
+'''
+
+# if allowed to mutate input array
+def max_profit(stock_prices):
+    if len(stock_prices) < 2:
+        return 0
+    min_price = stock_prices[0]
+    for i in xrange(0, len(stock_prices)):
+        price = stock_prices[i]
+        if price < min_price:
+            min_price = price
+            stock_prices[i] = 0
+        else:
+            stock_prices[i] = price - min_price
+    return max(stock_prices)
+
+# without mutating input array
+def max_profit(stock_prices):
+    if len (stock_prices) < 2:
+        return 0
+    max_profit = 0
+    min_price = stock_prices[0]
+    for price in stock_prices:
+        profit = price - min_price
+        min_price = min(min_price, price)
+        max_profit = max(max_profit, profit)
+    return max_profit
+
+
+
+#######################
+### STOCK PROFIT II ###
+#######################
+'''
+Say you have an array for which the ith element is the price of a given stock on day i.
+Design an algorithm to find the maximum profit. 
+You may complete as many transactions as you like (ie, buy one and sell one share 
+of the stock multiple times). 
+However, you may not engage in multiple transactions at the same time 
+(ie, you must sell the stock before you buy again).
+Difficulty: Easy-Medium
+'''
+
+def max_profit(stock_prices):
+    if len(stock_prices) < 2:
+        return 0
+    profit = 0
+    for i in xrange (1, len(stock_prices)):
+        current_price = stock_prices[i-1]
+        next_price = stock_prices[i]
+        if current_price < next_price:
+            profit += (next_price - current_price)
+    return profit
 
 
 
@@ -978,6 +1116,31 @@ def search(nums):
     return -1
 
 
+
+
+# class Solution:
+#     def search(self, nums: List[int], target: int) -> int:
+#         start, end = 0, len(nums) - 1
+#         while start <= end:
+#             mid = start + (end - start) // 2
+#             if nums[mid] == target:
+#                 return mid
+#             elif nums[mid] >= nums[start]:
+#                 if target >= nums[start] and target < nums[mid]:
+#                     end = mid - 1
+#                 else:
+#                     start = mid + 1
+#             else:
+#                 if target <= nums[end] and target > nums[mid]:
+#                     start = mid + 1
+#                 else:
+#                     end = mid - 1
+#         return -1
+
+
+
+
+
 '''
 Suppose an array sorted in ascending order is rotated at some pivot unknown to you beforehand.
 
@@ -996,25 +1159,25 @@ Example 2:
     Output: 0
 '''
 
-    def findMin(nums):
-        if len(nums) == 1:  return nums[0]
-        if nums[-1] > nums[0]:           # when the array is not rotated
-            return nums[0]
+def findMin(nums):
+    if len(nums) == 1:  return nums[0]
+    if nums[-1] > nums[0]:           # when the array is not rotated
+        return nums[0]
+    
+    lo, hi = 0, len(nums) - 1
+    while lo <= hi:
+        mid = lo + (hi - lo) // 2
         
-        lo, hi = 0, len(nums) - 1
-        while lo <= hi:
-            mid = lo + (hi - lo) // 2
-            
-            # ans found
-            if nums[mid] > nums[mid + 1]:
-                return nums[mid + 1]
-            if nums[mid - 1] > nums[mid]:
-                return nums[mid]
+        # ans found
+        if nums[mid] > nums[mid + 1]:
+            return nums[mid + 1]
+        if nums[mid - 1] > nums[mid]:
+            return nums[mid]
 
-            if nums[mid] > nums[0]:         # indicates no rotation
-                lo = mid + 1
-            else:                           # search in rotated part
-                hi = mid - 1
+        if nums[mid] > nums[0]:         # indicates no rotation
+            lo = mid + 1
+        else:                           # search in rotated part
+            hi = mid - 1
 
 
 
@@ -1043,7 +1206,7 @@ def group_anagrams(strs):
 	key_dict = {}
 	
 	for s in strs:
-		char_key = tuple(sorted(s))
+		char_key = str(sorted(s))
 		if char_key in key_dict:
 			key_dict[char_key].append(s)
 		else:
@@ -1148,6 +1311,6 @@ def find_combinations(curr_seq, next_vals):
 
     return next_seq
 
-# print(get_words('12', DICT))
-# print(get_words('122', DICT))
-# print(get_words('1222', DICT))
+
+
+
