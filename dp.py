@@ -156,6 +156,39 @@ def rob(nums):
     return dp[-1]
 
 
+
+###################
+### PAINT HOUSE ###
+###################
+'''
+There is a row of n houses, where each house can be painted one of three colors: red, blue, or green. 
+The cost of painting each house with a certain color is different. 
+
+You have to paint all the houses such that no two adjacent houses have the same color.
+
+The cost of painting each house with a certain color is represented by an n x 3 cost matrix costs.
+
+For example, costs[0][0] is the cost of painting house 0 with the color red; 
+costs[1][2] is the cost of painting house 1 with color green, and so on...
+
+Return the minimum cost to paint all houses.
+'''
+# time: O(n)
+# space: O(1)
+ def minCost(self, costs):
+        
+        if len(costs) == 0: 
+            return 0
+        
+        for i in range(1,len(costs)):
+            costs[i][0] += min(costs[i-1][1],costs[i-1][2])
+            costs[i][1] += min(costs[i-1][0],costs[i-1][2])            
+            costs[i][2] += min(costs[i-1][1],costs[i-1][0])   
+            
+        return min(costs[-1])
+
+
+
 ### REGEX ESPRESSION MATCHING ###
 '''
 Given an input string s and a pattern p, implement regular expression matching with support for '.' and '*' where:
@@ -221,9 +254,6 @@ if __name__ == '__main__':
 
 
 
-
-
-# jump game
 
 # longet increasing subsequence
 

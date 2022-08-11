@@ -3,10 +3,6 @@
 # ARRAY #
 #########
 
-# The zip() function takes iterables (can be zero or more), 
-# aggregates them in a tuple, and returns it.
-for c,d in zip(first, second):
-
 # splice
 a[-1]    # last item in the array
 a[-2:]   # last two items in the array
@@ -14,28 +10,53 @@ a[1:]    # everything except the first item
 a[:-1]   # everything except the last item
 
 a[::-1]    # all items in the array, reversed
-a[1::-1]   # the first two items, reversed
-a[:-3:-1]  # the last two items, reversed
-a[-3::-1]  # everything except the last two items, reversed
 
-# sort by key (largest first)
+# sorted key (largest first)
 sorted_counts = sorted(entry[1].items(), key = lambda x: x[0], reverse=True)
 
-# sort by values (largest first)
+# sorted values (largest first)
 sorted_counts = sorted(entry[1].items(), key = lambda x: x[1], reverse=True)
+
+# sort keys, then using those keys after sorting values
+voted_names = sorted(d.keys())
+return "".join(sorted(voted_names, key=lambda x: d[x], reverse=True))
+
+# sort by comparing two values
+# nums = ['10', '2']
+nums.sort(cmp = lambda x, y: cmp(x + y, y + x), reverse = True)
+# nums = ['2', '10'] since '210' > '102'
 
 # arr to string
 list1 = ['1', '2', '3']
 str1 = ''.join(list1)
 
-# random range
+# one type to another
+nums = [1, 2, 3]
+nums_str = map(str, nums) # ['1', '2', '3']
+
+# random range (remove random element)
 random.randrange(len(aux))
 aux.pop(remove_idx)
+
+# for loop BACKWARDS
+# first -1: i > -1 
+# second -1: decrement by 1
+for i in range(len(arr), -1, -1):
+  
+
+############
+# 2D ARRAY #
+############
+
+rows, cols = len(grid), len(grid[0])
+dp = [[float("inf") for x in range(cols)] for y in range(rows)] 
+
 
 ###########
 ## CLASS ## 
 ###########
 # A Sample class with init method
+# Class objects used in other classes need getter/setter
 class Person:
    
     # init method or constructor 
@@ -43,20 +64,39 @@ class Person:
         self.name = name
    
     # Sample Method 
-    def say_hi(self):
-        print('Hello, my name is', self.name)
+    def say_message(self, message):
+        print('Hello, my name is' + self.name, " and " + message)
+
+    def get_name(self):
+        return self.name
+
+    def set_name(self, new_name):
+        self.name = new_name
+
+    def .... (): 
+        self.say_message()
    
 p = Person('Nikhil')
 p.say_hi()
+p.set_name('Yash')
+
+# check integer: 
+n.isInteger() 
 
 
 ################
 ## DICTIONARY ##
 ################
 
-# python3
+# python3 collections
 import collections 
-collections.Counter(nums)
+counter = collections.Counter(nums)
+dict_list = collections.defaultdict(list) 
+ordered_dict = OrderedDict() #order of keys inserted preserved
+
+# sorted dict - keys sorted by value (TreeMap like data structure)
+from sortedcontainers import SortedDict
+sorted_dict = SortedDict()
 
 # setting up counter
 num_count = {}
@@ -67,6 +107,7 @@ for num in nums:
 inner_dict = letter_count.get(c1, {})
 inner_dict[c2] = inner_dict.get(c2, 0) + 1
 letter_count[c1] = inner_dict
+
 
 ######################
 ## HEAPQ - MIN HEAP ##
@@ -82,6 +123,9 @@ heapq.heappop(heap)
 
 # max heap
 heapq.heappush(heap, -1*k)
+
+# peek 
+heap[0]
 
 
 #########
@@ -125,10 +169,7 @@ index = str1.index(str2)
 
 # Last In First Out (DFS)
 stack = []
-
 stack.append('A')
-stack.append('B')
-
 stack.pop()
 
 
@@ -138,10 +179,8 @@ stack.pop()
 
 # First In First Out (BFS)
 queue = []
-
 queue.append('A')
 queue.pop(0)
-
 
 
 ##################################
@@ -153,11 +192,10 @@ queue.pop(0)
 ## BFS ## 
 #########
 # time: O(N) for tree, O(V+E) for graph
-# queue implementation
+# QUEUE implementation
 
-visited = [] # List to keep track of visited nodes.
+visited = set() # List to keep track of visited nodes.
 queue = []     #Initialize a queue
-
 
 def iter_bfs(visited, graph, node):
   visited.append(node)
@@ -174,7 +212,6 @@ def iter_bfs(visited, graph, node):
 
 
 def recursive_bfs(graph, q, discovered):
- 
     if not q:
         return
  
@@ -191,11 +228,12 @@ def recursive_bfs(graph, q, discovered):
  
     recursiveBFS(graph, q, discovered)
 
+
 #########
 ## DFS ## 
 #########
 # time: O(N) for tree, O(V+E) for graph
-# stack implementation 
+# STACK implementation 
 
 visited = set() # Set to keep track of visited nodes.
 
@@ -206,6 +244,8 @@ def dfs(visited, graph, node):
         for neighbour in graph[node]:
             dfs(visited, graph, neighbour)
 
+for i in range ...
+    dfs(i...)
 
 
 ###################
@@ -263,8 +303,8 @@ def is_cycle(i):
 ############
 '''
 If the given Binary Tree is Binary Search Tree:
-- we can store it by either storing preorder or postorder traversal.
-- inorder traversal of BST is an array sorted in the ascending order.
+- we can store it by either storing PRE-ORDER or POST-ORDER traversal.
+- INORDER traversal of BST is an array sorted in the ascending order.
 '''
 
 # Pre-order Serialiation
@@ -291,14 +331,17 @@ def main(stones):
         ...
         visited.add((value,k))
         ...
-        return goFurther(value+k,k) or goFurther(value+k,k+1)
+        return helper(value+k,k) or helper(value+k,k+1)
     
     return helper(stones[0],1)
 
 
-MoneyMoney3238!
 
-MoneyBunny1234!
 
-Science4life!
+###########
+### SQL ###
+###########
+'''
+https://www.sqltutorial.org/sql-cheat-sheet/
+'''
 

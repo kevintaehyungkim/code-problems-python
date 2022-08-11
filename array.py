@@ -97,6 +97,7 @@ Given an array of non-negative integers, you are initially positioned at the fir
 Each element in the array represents your maximum jump length at that position.
 Determine if you are able to reach the last index.
 '''
+
 def can_jump(nums):
     m = 0
     for i in xrange(len(nums)):
@@ -670,37 +671,6 @@ def trap(height):
 
 
 
-#########################################
-### LONGEST INCREASING PATH IN MATRIX ###
-#########################################
-'''
-Given an m x n integers matrix, 
-return the length of the longest increasing path in matrix.
-
-From each cell, you can either move in four directions: left, right, up, or down. 
-You may not move diagonally or move outside the boundary (i.e., wrap-around is not allowed).
-'''
-
-# time: O(mn)
-# space: O(mn)
-def longestIncreasingPath(self, matrix):
-    def dfs(i, j):
-        if not dp[i][j]:
-            val = matrix[i][j]
-            dp[i][j] = 1 + max(
-                dfs(i - 1, j) if i and val > matrix[i - 1][j] else 0,
-                dfs(i + 1, j) if i < M - 1 and val > matrix[i + 1][j] else 0,
-                dfs(i, j - 1) if j and val > matrix[i][j - 1] else 0,
-                dfs(i, j + 1) if j < N - 1 and val > matrix[i][j + 1] else 0)
-        return dp[i][j]
-
-    if not matrix or not matrix[0]: return 0
-    M, N = len(matrix), len(matrix[0])
-    dp = [[0] * N for i in range(M)]
-    return max(dfs(x, y) for x in range(M) for y in range(N))
-
-
-
 ##############################################
 ### REVERSE SUBSTRINGS BETWEEN PARENTHESES ###
 ##############################################
@@ -880,6 +850,8 @@ def splitArray(self, nums: List[int], m: int) -> int:
             min_val=mid+1
             
     return min_val
+
+
 
 ######################
 ### STOCK PROFIT I ###
@@ -1221,7 +1193,8 @@ def group_anagrams(strs):
 ######################
 '''
 Write a function that takes an input string and an alphabet, 
-and returns the shortest substring of the input which contains every letter of the alphabet at least once.
+and returns the shortest substring of the input which contains 
+every letter of the alphabet at least once.
 
 Example:
 Input:  "aaccbc"
@@ -1278,6 +1251,7 @@ DICT = {
 # get_words('12', DICT) => ['ac', 'ad', 'bc', 'bd', 'x']
 # get_words('122', DICT) => ['acc', 'adc', 'bcc', 'bdc', 'acd', 'add', 'bcd', 'bdd', 'xc', 'xd', 'ay', 'by']
 
+# add memoization for string length > 1 ex. 12 12 
 
 def get_words(num_string, char_dict):
     if not num_string or not char_dict:

@@ -1,4 +1,36 @@
 
+
+#########################################
+### LONGEST INCREASING PATH IN MATRIX ###
+#########################################
+'''
+Given an m x n integers matrix, 
+return the length of the longest increasing path in matrix.
+
+From each cell, you can either move in four directions: left, right, up, or down. 
+You may not move diagonally or move outside the boundary (i.e., wrap-around is not allowed).
+'''
+
+# time: O(mn)
+# space: O(mn)
+def longestIncreasingPath(self, matrix):
+    def dfs(i, j):
+        if not dp[i][j]:
+            val = matrix[i][j]
+            dp[i][j] = 1 + max(
+                dfs(i - 1, j) if i and val > matrix[i - 1][j] else 0,
+                dfs(i + 1, j) if i < M - 1 and val > matrix[i + 1][j] else 0,
+                dfs(i, j - 1) if j and val > matrix[i][j - 1] else 0,
+                dfs(i, j + 1) if j < N - 1 and val > matrix[i][j + 1] else 0)
+        return dp[i][j]
+
+    if not matrix or not matrix[0]: return 0
+    M, N = len(matrix), len(matrix[0])
+    dp = [[0] * N for i in range(M)]
+    return max(dfs(x, y) for x in range(M) for y in range(N))
+
+
+
 #########################
 ### NUMBER OF ISLANDS ###
 #########################
@@ -157,6 +189,31 @@ def dfs(row, col):
     
 """
 # pacific atlantic 
+
+
+
+######################
+### MAXIMAL SQUARE ###
+######################
+'''
+Given an m x n binary matrix filled with 0's and 1's, 
+find the largest square containing only 1's and return its area.
+'''
+def maximalSquare(self, matrix):
+    rows, cols = len(matrix), len(matrix[0])
+    dp = [[0 for x in range(cols)] for y in range(rows)] 
+    
+    curr_max = 0
+    
+    
+    for r in range(rows):
+        for c in range(cols):
+            if matrix[r][c] == "1":
+                dp[r][c] = min(dp[r-1][c-1], dp[r-1][c], dp[r][c-1])+1
+            curr_max = max(curr_max, dp[r][c])
+            
+    return curr_max**2
+
 
 
 ##############################

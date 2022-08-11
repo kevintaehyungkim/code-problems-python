@@ -207,10 +207,10 @@ def countComponents(n, edges):
     return count
 
 def dfs(node, visited):
-        visited.add(node)            
-        for neighbor in graph[node]:
-            if neighbor not in visited:
-                dfs(neighbor, visited)
+    visited.add(node)            
+    for neighbor in graph[node]:
+        if neighbor not in visited:
+            dfs(neighbor, visited)
 
 
 

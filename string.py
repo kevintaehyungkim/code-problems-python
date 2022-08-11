@@ -237,13 +237,81 @@ def longest_unique_substring(s):
 
 
 
+################################
+### MINIMUM WINDOW SUBSTRING ###
+################################
+'''
+Given two strings s and t of lengths m and n respectively, 
+return the minimum window substring of s such that every character in t 
+(including duplicates) is included in the window. 
+If there is no such substring, return the empty string "".
+
+The testcases will be generated such that the answer is unique.
+A substring is a contiguous sequence of characters within the string.
+
+Example 1:
+
+Input: s = "ADOBECODEBANC", t = "ABC"
+Output: "BANC"
+Explanation: The minimum window substring "BANC" includes 'A', 'B', and 'C' from string t.
+'''
+# key idea: sliding window - if all char counts satisfied (all_present), remove from start 
+# time: O(s+t)
+# space: O(s+t)
+def minWindow(self, s, t):
+        
+        dict_t = {} 
+        for c in t: 
+            dict_t[c] = dict_t.get(c,0) + 1
+            
+        temp_count = {} 
+        start = end = 0
+        all_present = False 
+        shortest = ""
+        
+        def check_formed():
+            for c in dict_t: 
+                if temp_count[c] < dict_t[c]:
+                    return False 
+            return True 
+        
+        while end < len(s):
+            s_end = s[end] 
+            if s_end in dict_t:
+                temp_count[s_end] = temp_count.get(s_end, 0) + 1
+                if not all_present and len(temp_count.keys()) == len(dict_t.keys()):
+                    all_present = check_formed()
+                
+            if all_present: 
+                while start < end: 
+                    s_start = s[start]
+                    if s_start not in dict_t:
+                        start += 1
+                    elif temp_count[s_start] > dict_t[s_start]:
+                        temp_count[s_start] -= 1
+                        start += 1
+                    else:
+                        break
+
+                if shortest == "": 
+                    shortest = s[start:end+1]
+                else: 
+                    shortest = shortest if len(shortest) < (end-start+1) else s[start:end+1]
+                
+            end += 1    
+
+        return shortest
+
+
+
 ###################################
 ### PALINDROMIC SUBSTRING COUNT ###
 ###################################
 '''
 Given a string, your task is to count how many palindromic substrings in this string.
 
-The substrings with different start indexes or end indexes are counted as different substrings even they consist of same characters.
+The substrings with different start indexes or end indexes are counted as different 
+substrings even they consist of same characters.
 
 Example 1:
 
@@ -280,6 +348,47 @@ def palindrome_helper(i1, i2, s):
         
     return count
 
-    
+
+
+##################
+### WORD BREAK ###
+##################
+'''
+Given a string s and a dictionary of strings wordDict, 
+return true if s can be segmented into a sequence of one or more dictionary words.
+
+Note that the same word in the dictionary may be reused multiple times.
+
+Example 1:
+Input: s = "leetcode", wordDict = ["leet","code"]
+Output: true
+Explanation: Return true because "leetcode" can be segmented as "leet code".
+'''
+# time: O(n^3) - recursion tree can go up to n^2, and substring computation O(n) space: O(n^2)
+# space: O(n^2)
+def wordBreak(s, wordDict):
+    memo = {}
+
+    def can_construct(s2):  
+        
+        if s2 in memo:
+            return memo[s2]
+        
+        if s2 == "":
+            return True
+        
+        for word in wordDict:
+            if word == s2[0:len(word)]:
+                suffix = s2[len(word):]
+                
+                if can_construct(suffix):
+                    memo[s2] = True
+                    return True
+                
+        memo[s2] = False
+        return False
+
+    return can_construct(s)
+
 
 

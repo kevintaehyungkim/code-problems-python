@@ -143,3 +143,18 @@ class Solution:
         head.next.next, head.next = head, None
         return reversedList
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
