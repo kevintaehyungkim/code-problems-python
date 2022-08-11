@@ -1,0 +1,37 @@
+#behavioral 
+
+- good, generic questions
+- describe conflict and how you solved
+
+
+#1 - 
+
+a. single mountain array ex. 123432321 -> binary search 
+b. multiple peaks mountain also using binary search
+-> find the local mins, and separate arrays and pass into (a) 
+-> trick is how to use binary search when array isn't sorted since multiple slopes
+
+
+#2 - possible coordinate mapping
+
+→ list of strings such as “P1 (S | W | NE ... SE | N | E) P2”
+→ see if these coordinate arrangement is possible  
+→ build graph, detect cycle 
+→ if cycle then 
+
+
+#3 - server aggregation 
+
+- server aggregated time
+- you have tuples for each server that has RAM usage "changes"
+	S1 = [(0,0), (3,10), ... ]
+	S2 = [(0,0), (3,10), ... ]
+- result array should contain 
+
+
+#4 possible square
+
+- given list of points in 2d-plane and query point, see if it’s possible to build square
+- create set for all points
+- also create vertical and horizontal lookup mappings for each x and y 
+- only check for points in same vertical/horizontal plane
